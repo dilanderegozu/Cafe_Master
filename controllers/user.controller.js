@@ -7,13 +7,12 @@ exports.createUser = async (req, res) => {
   try {
     const isInvalid = utils.helper.handleValidation(req);
     if (isInvalid) {
-      res
+      return res
         .status(StatusCodes.BAD_REQUEST)
         .json({ ...baseResponse, ...isInvalid });
-      return;
     }
     const json = await userService.user.createUser(req);
-    res.status(StatusCodes.CREATED).json({
+    return res.status(StatusCodes.CREATED).json({
       ...baseResponse,
       data: json,
       error: false,
@@ -23,7 +22,7 @@ exports.createUser = async (req, res) => {
     });
   } catch (error) {
     utils.helper.logToError(error, req);
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       ...baseResponse,
       error: true,
       success: false,
@@ -38,13 +37,13 @@ exports.signIn = async (req, res) => {
   try {
     const isInvalid = utils.helper.handleValidation(req);
     if (isInvalid) {
-      res.status(StatusCodes.BAD_REQUEST).json({
+      return res.status(StatusCodes.BAD_REQUEST).json({
         ...baseResponse,
         ...isInvalid,
       });
     }
     const json = await userService.user.signIn(req);
-    res.status(StatusCodes.OK).json({
+    return res.status(StatusCodes.OK).json({
       ...baseResponse,
       data: json,
       success: true,
@@ -53,7 +52,7 @@ exports.signIn = async (req, res) => {
     });
   } catch (error) {
     utils.helper.logToError(error, req);
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       ...baseResponse,
       error: true,
       success: false,
@@ -68,13 +67,13 @@ exports.getAllUser = async (req, res) => {
   try {
     const isInvalid = utils.helper.handleValidation(req);
     if (isInvalid) {
-      res.status(StatusCodes.BAD_REQUEST).json({
+      return res.status(StatusCodes.BAD_REQUEST).json({
         ...baseResponse,
         ...isInvalid,
       });
     }
     const json = await userService.user.getAllUser(req);
-    res.status(StatusCodes.OK).json({
+    return res.status(StatusCodes.OK).json({
       ...baseResponse,
       data: json,
       success: true,
@@ -83,7 +82,7 @@ exports.getAllUser = async (req, res) => {
     });
   } catch (error) {
     utils.helper.logToError(error, req);
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       ...baseResponse,
       error: true,
       success: false,
@@ -92,18 +91,18 @@ exports.getAllUser = async (req, res) => {
       code: StatusCodes.INTERNAL_SERVER_ERROR,
     });
   }
-}; 
+};
 exports.getUser = async (req, res) => {
   try {
     const isInvalid = utils.helper.handleValidation(req);
     if (isInvalid) {
-      res.status(StatusCodes.BAD_REQUEST).json({
+      return res.status(StatusCodes.BAD_REQUEST).json({
         ...baseResponse,
         ...isInvalid,
       });
     }
     const json = await userService.user.getUser(req);
-    res.status(StatusCodes.OK).json({
+    return res.status(StatusCodes.OK).json({
       ...baseResponse,
       data: json,
       success: true,
@@ -112,7 +111,7 @@ exports.getUser = async (req, res) => {
     });
   } catch (error) {
     utils.helper.logToError(error, req);
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       ...baseResponse,
       error: true,
       success: false,
@@ -127,13 +126,13 @@ exports.deleteUser = async (req, res) => {
   try {
     const isInvalid = utils.helper.handleValidation(req);
     if (isInvalid) {
-      res.status(StatusCodes.BAD_REQUEST).json({
+      return res.status(StatusCodes.BAD_REQUEST).json({
         ...baseResponse,
         ...isInvalid,
       });
     }
     const json = await userService.user.deleteUser(req);
-    res.status(StatusCodes.OK).json({
+    return res.status(StatusCodes.OK).json({
       ...baseResponse,
       data: json,
       success: true,
@@ -142,7 +141,7 @@ exports.deleteUser = async (req, res) => {
     });
   } catch (error) {
     utils.helper.logToError(error, req);
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       ...baseResponse,
       error: true,
       success: false,
@@ -157,13 +156,13 @@ exports.updateUser = async (req, res) => {
   try {
     const isInvalid = utils.helper.handleValidation(req);
     if (isInvalid) {
-      res.status(StatusCodes.BAD_REQUEST).json({
+      return res.status(StatusCodes.BAD_REQUEST).json({
         ...baseResponse,
         ...isInvalid,
       });
     }
     const json = await userService.user.updateUser(req);
-    res.status(StatusCodes.OK).json({
+    return res.status(StatusCodes.OK).json({
       ...baseResponse,
       data: json,
       success: true,
@@ -172,7 +171,7 @@ exports.updateUser = async (req, res) => {
     });
   } catch (error) {
     utils.helper.logToError(error, req);
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       ...baseResponse,
       error: true,
       success: false,
@@ -187,13 +186,13 @@ exports.createPassword = async (req, res) => {
   try {
     const isInvalid = utils.helper.handleValidation(req);
     if (isInvalid) {
-      res.status(StatusCodes.BAD_REQUEST).json({
+      return res.status(StatusCodes.BAD_REQUEST).json({
         ...baseResponse,
         ...isInvalid,
       });
     }
-    const json = await userService.user.createPassword(req,res);
-    res.status(StatusCodes.OK).json({
+    const json = await userService.user.createPassword(req, res);
+    return res.status(StatusCodes.OK).json({
       ...baseResponse,
       data: json,
       success: true,
@@ -202,7 +201,7 @@ exports.createPassword = async (req, res) => {
     });
   } catch (error) {
     utils.helper.logToError(error, req);
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       ...baseResponse,
       error: true,
       success: false,

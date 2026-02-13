@@ -17,7 +17,7 @@ const productSchema = new Schema(
     },
     status: {
       type: String,
-      enum: ["Available", "Out of Stock", "Discontinued"],
+      enum: ["Stokta", "Tükendi"],
     },
     discountRate: {
       type: Number,

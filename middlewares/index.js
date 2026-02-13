@@ -1,1 +1,7 @@
-// Your updated index.js content here
+const authMiddleware = require("./auth.middlewares");
+const loggerMiddleware = require("./logger.middlewares");
+
+module.exports = {
+  authMiddleware,
+  loggerMiddleware,
+};

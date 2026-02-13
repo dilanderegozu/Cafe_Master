@@ -1,28 +1,53 @@
-const { body, query, param } = require("express-validator");
-const utils = require("../utils/index");
+const { body, query } = require("express-validator");
 
 const UserValidator = {
+
   validateCreateUser() {
-    return [body("birthDate").not().isEmpty().isDate()];
+    return [
+      body("email")
+        .isEmail()
+        .withMessage("Geçerli bir email giriniz"),
+
+      body("password")
+        .isLength({ min: 6 })
+        .withMessage("Şifre en az 6 karakter olmalıdır"),
+
+      body("birthDate")
+        .isISO8601()
+        .withMessage("Geçerli bir tarih giriniz"),
+    ];
   },
+
   validateUpdateUser() {
-    return [body("email").isEmail()];
+    return [
+      body("email")
+        .optional()
+        .isEmail()
+        .withMessage("Geçerli bir email giriniz"),
+    ];
   },
-  validateSignInWithPassword() {
-    return [body("password").not().isEmpty().isLength({ min: 4, max: 10 })];
-  },
+
   validateSignIn() {
-    return [body("userId").not().isEmpty()];
+    return [
+      body("email")
+        .isEmail()
+        .withMessage("Email zorunludur"),
+
+      body("password")
+        .notEmpty()
+        .withMessage("Şifre zorunludur"),
+    ];
   },
+
   validateUpdateAvatar() {
-    return [query("id").isMongoId()];
+    return [
+      query("id")
+        .isMongoId()
+        .withMessage("Geçersiz ID"),
+    ];
   },
-  validateGetUser() {
-    return [body("userId").not().isEmpty()];
-  },
-  validateCreatePassword() {
-    return [body("password").not().isEmpty().isLength({ min: 4, max: 10 })];
-  }
+
 };
+
 
 module.exports = UserValidator;
