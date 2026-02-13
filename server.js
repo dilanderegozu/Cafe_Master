@@ -29,15 +29,15 @@ app.set("view engine", "ejs");
 
 
 app.use(process.env.APP_PREFIX, router); 
-db.mongoConnect().then(() => {
-  app.listen(PORT, () => {
-    console.log(`App listening on port ${PORT}`);
+db.db.mongoConnect()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log("Server", PORT, "portunda çalışıyor");
+    });
+  })
+  .catch((e) => {
+    console.log("Hata oluştu:", e.message);
   });
-});
-
-
-
-
 
 
 

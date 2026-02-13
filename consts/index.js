@@ -1,5 +1,8 @@
-const router = require("./router.prefix");
-
+const router = require("./router.prefix.consts");
+const general = require("./general.consts")
+const auth = require("./auth.consts");
 module.exports = {
-  router
+  router,
+  general,
+  auth
 };

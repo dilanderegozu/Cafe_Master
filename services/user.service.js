@@ -1,7 +1,7 @@
 const User = require("../models/user.model");
 const utils = require("../utils/index");
 const userDal = require("../dal/index");
-
+const jwt = require("jsonwebtoken")
 
 exports.createUser = async (req) => {
   try {
@@ -17,7 +17,7 @@ exports.createUser = async (req) => {
       email,
       password: _password,
     });
-    return user;
+    return user.save();
   } catch (error) {
     throw new Error(error);
   }
@@ -39,9 +39,17 @@ exports.signIn = async (req) => {
       throw new Error("Şifre hatalı");
     }
 
+    
+    const token = jwt.sign(
+      { id: user._id, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+ 
     return {
       id: user._id, //mongodb için _id olması daha mantıklı
       email: user.email,
+      token
     };
   } catch (error) {
     throw error;

@@ -16,7 +16,7 @@ discountRate: %10 gibi (0-100 arası).
 category & subcategory: Filtreleme için.
 
 
-Sipariş / Satış Modeli (Order)
+Sipariş / Satış Modeli (Sale)
 tableNumber: Hangi masa?
 items: [{ productId, quantity, priceAtTime }] (Ürün fiyatı değişse bile satıldığı andaki fiyatı korumalıyız).
 subTotal: İndirimsiz toplam.

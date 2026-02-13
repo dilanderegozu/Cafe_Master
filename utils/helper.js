@@ -6,7 +6,7 @@ const fs = require("fs");
 const dns = require("dns");
 const os = require("os");
 const User = require("../models/user.model");
-
+const logger = require("./logger")
 exports.hashToPassword = (password) => {
   return md5(password);
 };

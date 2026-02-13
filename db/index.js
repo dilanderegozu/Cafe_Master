@@ -1,2 +1,4 @@
-const db = require("./db");
-module.exports = db;
+const db = require("./db")
+module.exports = {
+    db
+}
