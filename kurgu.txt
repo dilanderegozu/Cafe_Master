@@ -1,38 +1,12 @@
-1. Proje Mimarisi ve Akış
-Temel Akış:
-Müşteri Tarafı (Admin): Garson masadan siparişi girer.
-Stok Kontrolü: Sipariş girilirken stock kontrol edilir. Eğer ürün bittiyse sipariş verilmesi engellenir.
-İndirim Motoru: Eğer ürünün kategorisinde veya o anki kampanya dahilinde bir indirim varsa fiyata yansıtılır.
-Real-time Mutfak Paneli: Sipariş geçildiği anda Socket.io ile mutfak ekranına "Yeni Sipariş" bildirimi düşer (sayfa yenilemeden).
-Admin Paneli: İşletme sahibi stokları günceller, raporları (toplam satış vb.) görür. 
+Socket.io için:
 
-2.Veri Modelleri
-Ürün Modeli (Product)
-name: Ürün adı.
-price: Birim fiyat.
-stock: Mevcut miktar.
-status: "Available", "Out of Stock", "Discontinued".
-discountRate: %10 gibi (0-100 arası).
-category & subcategory: Filtreleme için.
+Sipariş oluşturulduğunda → Mutfağa/Kasaya anlık bildirim
+Sipariş durumu değiştiğinde → Garson/Müşteriye bildirim
+Ödeme alındığında → İlgili masaya bildirim
+Stok azaldığında → Yöneticiye uyarı
 
+Redis için:
 
-Sipariş / Satış Modeli (Sale)
-tableNumber: Hangi masa?
-items: [{ productId, quantity, priceAtTime }] (Ürün fiyatı değişse bile satıldığı andaki fiyatı korumalıyız).
-subTotal: İndirimsiz toplam.
-totalDiscount: Yapılan toplam indirim tutarı.
-finalTotal: Müşterinin ödediği net tutar.
-orderStatus: "Pending", "Preparing", "Served", "Completed".
-paymentMethod: "Cash", "Credit Card".
-
-3. Business Logic (İş Mantığı)
-Backend geliştirici olarak fark yaratacağın yer burası. Bir sipariş geldiğinde şu "Service" katmanını kurgulamalısın:
-Stok Kontrolü: Sipariş edilen miktar mevcut mu?
-Fiyat Hesaplama: product.price üzerinden discountRate uygulanıp totalAmount hesaplanmalı.
-Transaction: Stok düşme ve Sipariş oluşturma işlemleri atomik olmalı (biri hata verirse diğeri iptal olmalı).
-Socket Yayını: İşlem başarılıysa mutfağa sinyal gönderilmeli.
-
-4. Socket.io Mimarisi (Server-Side)
-admin odası: Tüm stok güncellemelerini ve yeni siparişleri dinler
-kitchen odası: Sadece yeni gelen yemek siparişlerini dinler.
-table-X odası: Sadece o masaya ait siparişin durum güncellemelerini (Hazır/Yolda) dinler.
+Ürün listesi cache → Her seferinde DB'ye gitmemek için
+Aktif siparişler cache → Hızlı erişim
+Günlük satış istatistikleri → Performans için
