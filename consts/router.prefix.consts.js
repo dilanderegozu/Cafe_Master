@@ -1,7 +1,7 @@
 const ROUTER_PREFIX = {
   AUTH: "auth",          
   PRODUCTS: "products",  
-  SALES: "sales",        
+  ORDERS: "orders",        
   TABLES: "tables",    
   CATEGORIES: "categories", 
   ADMIN: "admin"        

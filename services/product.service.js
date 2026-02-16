@@ -34,7 +34,7 @@ exports.createProduct = async (productData, userId) => {
     return product;
   } catch (error) {
     await session.abortTransaction();
-    throw new Error(error);
+  throw error;
   } finally {
     session.endSession(); 
   }
@@ -51,7 +51,7 @@ exports.getAllProduct = async () => {
       createdAt: product.createdAt,
     }));
   } catch (error) {
-    throw new Error(error);
+    throw error;
   }
 };
 
@@ -69,7 +69,7 @@ exports.getProductById = async (id) => {
       createdAt: product.createdAt,
     };
   } catch (error) {
-    throw new Error(error);
+   throw error;
   }
 };
 
@@ -88,7 +88,7 @@ exports.deleteProductById = async (id) => {
     return product;
   } catch (error) {
     await session.abortTransaction();
-    throw new Error(error);
+   throw error;
   } finally {
     session.endSession(); 
   }
@@ -154,7 +154,7 @@ exports.updateProduct = async (id, updateData, userId) => {
     return product;
   } catch (error) {
     await session.abortTransaction();
-    throw new Error(error);
+throw error
   } finally {
     session.endSession(); 
   }

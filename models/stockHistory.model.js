@@ -9,7 +9,7 @@ const stockHistorySchema = new Schema({
   },
   changeType: {
     type: String,
-    enum: ["ÜRÜN EKLEME", "SATIŞ", "DÜZELTME", "ZAYİ", "İADE"],
+    enum: ["ÜRÜN EKLEME", "SATIŞ", "DÜZELTME", "ZAYİ", "İADE","GERİ YÜKLEME"],
   },
   beforeStock: {
     type: Number,

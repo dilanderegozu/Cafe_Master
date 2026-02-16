@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const saleSchema = new Schema(
+const orderSchema = new Schema(
   {
     tableNumber: {
       type: Number,
@@ -28,7 +28,6 @@ const saleSchema = new Schema(
     //indirimsiz toplam
     subTotal: {
       type: Number,
-      required: true,
       default: 0,
     },
     //toplam indiirm
@@ -54,5 +53,5 @@ const saleSchema = new Schema(
   { timestamps: true, autoIndex: true, minimize: true },
 );
 
-const Sale = mongoose.model("Sale", saleSchema, "sales");
-module.exports = Sale;
+const Order = mongoose.model("Order", orderSchema, "orders");
+module.exports = Order;

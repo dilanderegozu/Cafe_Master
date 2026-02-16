@@ -1,8 +1,8 @@
 const userDal = require("./user.dal");
 const productDal= require("./product.dal")
-const saleDal= require("./sale.dal")
+const orderDal= require("./order.dal")
 module.exports = {
   user: userDal,
   product:productDal,
-  sale:saleDal
+  order:orderDal
 };

@@ -19,7 +19,7 @@ exports.createUser = async (req) => {
     });
     return user.save();
   } catch (error) {
-    throw new Error(error);
+     throw error;
   }
 };
 
@@ -85,7 +85,7 @@ exports.getUser = async (req) => {
       createdAt: user.createdAt,
     };
   } catch (error) {
-    throw new Error(error);
+     throw error;
   }
 };
 
@@ -98,7 +98,7 @@ exports.deleteUser = async (req) => {
     }
     return "Kullanıcı başarı ile silindi";
   } catch (error) {
-    throw new Error(error);
+    throw error;
   }
 };
 
@@ -149,6 +149,6 @@ exports.createPassword = async (req, res) => {
       };
     }
   } catch (error) {
-    throw new Error(error);
+  throw error;
   }
 };
