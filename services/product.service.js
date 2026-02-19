@@ -19,37 +19,58 @@ exports.createProduct = async (productData, userId) => {
           beforeStock: 0,
           changeAmount: product.stock,
           newStock: product.stock,
-           userId: userId ,
+          userId: userId,
         },
       ],
       { session },
     );
 
     await session.commitTransaction();
+    await utils.redisHelper.delete("products:all");
     utils.logger.info("Product created", {
       productId: product._id,
       name: product.name,
     });
 
+    if (product.stock <= 10) {
+      const io = getIO();
+      io.to("admin").emit("low-stock-alert", {
+        productId: product._id,
+        productName: product.name,
+        currentStock: product.stock,
+        message: "Yeni ürün eklendi, stok düşük!",
+        timestamp: new Date(),
+      });
+    }
     return product;
   } catch (error) {
     await session.abortTransaction();
-  throw error;
+    throw error;
   } finally {
-    session.endSession(); 
+    session.endSession();
   }
 };
 
 exports.getAllProduct = async () => {
   try {
-    const products = await Product.find(); 
-    return products.map((product) => ({
-      id: product._id, 
+    const cachedProducts = await utils.redisHelper.get("products:all");
+    if (cachedProducts) {
+      console.log("Cache HIT: prdocuts:all");
+      return cachedProducts;
+    }
+    console.log("Cache MISS: products:all");
+
+    //cachede yoksa dbden çekicez
+    const products = await Product.find();
+    const formattedProducts = products.map((product) => ({
+      id: product._id,
       name: product.name,
       price: product.price,
       stock: product.stock,
       createdAt: product.createdAt,
     }));
+    await utils.redisHelper.set("products:all", formattedProducts, 3600);
+    return formattedProducts;
   } catch (error) {
     throw error;
   }
@@ -57,19 +78,32 @@ exports.getAllProduct = async () => {
 
 exports.getProductById = async (id) => {
   try {
+    const cacheKey = `products:${id}`;
+    const cachedProduct = await utils.redisHelper.get(cacheKey);
+    if (cachedProduct) {
+      console.log(` Cache HIT: ${cacheKey}`);
+      return cachedProduct;
+    }
+
+    console.log(` Cache MISS: ${cacheKey}`);
+
     const product = await Product.findById(id);
     if (!product) {
       throw new Error("Ürün bulunamadı");
     }
-    return {
+
+    const formattedProduct = {
       id: product._id,
       name: product.name,
       price: product.price,
-      stock: product.stock, 
+      stock: product.stock,
       createdAt: product.createdAt,
     };
+
+    await utils.redisHelper.set(cacheKey, formattedProduct, 3600);
+    return formattedProduct;
   } catch (error) {
-   throw error;
+    throw error;
   }
 };
 
@@ -85,12 +119,15 @@ exports.deleteProductById = async (id) => {
 
     await Stock.deleteMany({ productId: id }, { session });
     await session.commitTransaction();
+
+    await utils.redisHelper.delete(`products:${id}`);
+    await utils.redisHelper.delete(`products:all`);
     return product;
   } catch (error) {
     await session.abortTransaction();
-   throw error;
+    throw error;
   } finally {
-    session.endSession(); 
+    session.endSession();
   }
 };
 
@@ -108,7 +145,6 @@ exports.updateProduct = async (id, updateData, userId) => {
       throw new Error("Ürün bulunamadı");
     }
 
-   
     if (updateData.stock !== undefined && updateData.stock !== product.stock) {
       if (updateData.stock < 0) {
         throw new Error("Stok sayısı negatif olamaz");
@@ -119,7 +155,7 @@ exports.updateProduct = async (id, updateData, userId) => {
       const changeAmount = newStock - beforeStock;
 
       if (newStock === 0) {
-        updateData.status = "Tükendi"; 
+        updateData.status = "Tükendi";
       }
 
       let changeType;
@@ -129,7 +165,7 @@ exports.updateProduct = async (id, updateData, userId) => {
         changeType = "DÜZELTME";
       }
 
-      await Stock.create( 
+      await Stock.create(
         [
           {
             productId: product._id,
@@ -143,19 +179,29 @@ exports.updateProduct = async (id, updateData, userId) => {
         { session },
       );
     }
-
+    if (product.stock <= 10) {
+      const io = getIO();
+      io.to("admin").emit("Stok uyarısı", {
+        productId: product._id,
+        productName: product.name,
+        currentStock: product.stock,
+        message: "Stok seviyesi kritik!",
+        timestamp: new Date(),
+      });
+    }
     Object.assign(product, updateData);
     await product.save({ session });
 
     await session.commitTransaction();
-
-    utils.logger.info("Ürünler güncellendi", { productId: id }); 
+    await utils.redisHelper.delete(`products:${id}`); //güncellenen ürün temizlendi
+    await utils.redisHelper.delete("products:all"); // tüm ürünler listesi temizlendi
+    utils.logger.info("Ürünler güncellendi", { productId: id });
 
     return product;
   } catch (error) {
     await session.abortTransaction();
-throw error
+    throw error;
   } finally {
-    session.endSession(); 
+    session.endSession();
   }
 };

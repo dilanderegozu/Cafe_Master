@@ -10,3 +10,21 @@ Redis için:
 Ürün listesi cache → Her seferinde DB'ye gitmemek için
 Aktif siparişler cache → Hızlı erişim
 Günlük satış istatistikleri → Performans için
+
+
+Öğretmen: "Hangi öğrenciler sınıfta?"
+
+1. İlk seferinde → Yoklama defterine bakarsın (DB)
+   "Ali, Ayşe, Mehmet" (50 saniye sürer)
+   
+2. Bir kağıda yazarsın: "Ali, Ayşe, Mehmet" (CACHE)
+   
+3. Öğretmen tekrar sorunca → Kağıda bakarsın (2 saniye)
+   ✅ Çok hızlı!
+
+4. Yeni öğrenci geldi: "Fatma"
+   → Kağıdı YOK ET! (Cache temizle)
+   → Çünkü artık eski bilgi yanlış
+   
+5. Öğretmen tekrar sorunca → Yoklama defterine tekrar bak
+   "Ali, Ayşe, Mehmet, Fatma" (yeni liste)
