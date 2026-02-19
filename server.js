@@ -6,6 +6,7 @@ const configs = require("./configs/index");
 const db = require("./db/index");
 const router = require("./routers/index");
 const { initSocket } = require("./configs/socket.config");
+const mongoose = require("mongoose");
 
 require("./configs/redis.config");
 
@@ -45,6 +46,8 @@ app.get("/", (req, res) => {
 db.db.mongoConnect()
   .then(() => {
     server.listen(PORT, () => { 
+       console.log(" MongoDB bağlantısı başarılı");
+    console.log(` Veritabanı: ${mongoose.connection.name}`);
       console.log(` Server ${PORT} portunda çalışıyor`);
       console.log(` Socket.io aktif`);
       console.log(` API Prefix: ${process.env.APP_PREFIX}`);
