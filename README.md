@@ -52,11 +52,7 @@ işlemleri tek transaction içinde yürütülür.
 
 Hata durumunda:
 session.abortTransaction()
-
-
-ile tüm işlemler geri alınır.
-
-Bu sayede veri tutarlılığı korunur.
+ile tüm işlemler geri alınır. Bu sayede veri tutarlılığı korunur.
 
 ---
 
